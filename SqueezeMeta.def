@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%post
+    conda install -c conda-forge mamba
+    mamba create -n SqueezeMeta -c conda-forge -c bioconda -c fpusan squeezemeta
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+    echo "conda activate SqueezeMeta" >> $SINGULARITY_ENVIRONMENT
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate SqueezeMeta
+    mkdir /db/
+    configure_nodb.pl /db/
+
+%runscript
+    exec "$@"
+
+%labels
+    Author Romain Bazile <romain@bazile.io>
+    Version v1.0.0
+
+%help
+    This container provides a SqueezeMeta image ready to use.
